@@ -1,0 +1,12 @@
+{
+  "name": "Reading Club Backend: Go",
+  "description": "Reading Club App Backend module",
+  "keywords": [
+    "getting-started",
+    "go",
+    "sample",
+    "example"
+  ],
+  "website": "https://github.com/LeasyZhang/reading-club-backend",
+  "repository": "https://github.com/LeasyZhang/reading-club-backend"
+}
