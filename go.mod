@@ -1,4 +1,4 @@
-module reading-club
+module reading-club-backend
 
 go 1.12
 
