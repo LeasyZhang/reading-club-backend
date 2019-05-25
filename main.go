@@ -17,7 +17,7 @@ func handleRequests() {
 	router.DELETE("/user/:name", DeleteUser)
 	router.PUT("/user/:name/:email", UpdateUser)
 	
-	router.Run(":8080")
+	router.Run(":8081")
 }
 
 func main() {
