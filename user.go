@@ -12,12 +12,14 @@ var db *gorm.DB
 var err error
 var dbName = "reading-club.db"
 
+// User Model
 type User struct {
 	gorm.Model
 	Name  string `uri:"name" binding:"required"`
 	Email string `uri:"email" binding:"required"`
 }
 
+// InitialMigration : Database Init Operation, create database reading-club.db
 func InitialMigration() {
 	db, err = gorm.Open("sqlite3", dbName)
 	if err != nil {
@@ -30,6 +32,7 @@ func InitialMigration() {
 	db.AutoMigrate(&User{})
 }
 
+// AllUsers : List All Users
 func AllUsers(c *gin.Context) {
 
 	db, err = gorm.Open("sqlite3", dbName)
@@ -47,6 +50,7 @@ func AllUsers(c *gin.Context) {
 	})
 }
 
+// NewUser : Add User
 func NewUser(c *gin.Context) {
 
 	db, err := gorm.Open("sqlite3", dbName)
@@ -71,6 +75,7 @@ func NewUser(c *gin.Context) {
 	})
 }
 
+//DeleteUser : delete user of the given name
 func DeleteUser(c *gin.Context) {
 	db, err := gorm.Open("sqlite3", dbName)
 	if err != nil {
@@ -98,6 +103,7 @@ func DeleteUser(c *gin.Context) {
 	})
 }
 
+//UpdateUser : update user by name
 func UpdateUser(c *gin.Context) {
 	db, err := gorm.Open("sqlite3", dbName)
 	if err != nil {
