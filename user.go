@@ -45,6 +45,8 @@ func AllUsers(c *gin.Context) {
 	var users []User
 	db.Find(&users)
 
+	c.Writer.Header().Add("Access-Control-Allow-Origin", "*")
+	c.Writer.Header().Add("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 	c.JSON(200, gin.H{
 		"message": users,
 	})
@@ -70,6 +72,8 @@ func NewUser(c *gin.Context) {
 
 	db.Create(&User{Name: name, Email: email})
 
+	c.Writer.Header().Add("Access-Control-Allow-Origin", "*")
+	c.Writer.Header().Add("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 	c.JSON(200, gin.H{
 		"message": "New User Created!",
 	})
@@ -97,7 +101,9 @@ func DeleteUser(c *gin.Context) {
 	if user.ID > 0 {
 		db.Delete(&user)
 	}
-	
+
+	c.Writer.Header().Add("Access-Control-Allow-Origin", "*")
+	c.Writer.Header().Add("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 	c.JSON(200, gin.H{
 		"message": "Delete User Successfully",
 	})
@@ -122,12 +128,14 @@ func UpdateUser(c *gin.Context) {
 
 	var user User
 	db.Where("name = ?", name).Find(&user)
-	
+
 	if user.ID > 0 {
 		user.Email = updatedUser.Email
 		db.Save(&user)
 	}
-	
+
+	c.Writer.Header().Add("Access-Control-Allow-Origin", "*")
+	c.Writer.Header().Add("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 	c.JSON(200, gin.H{
 		"message": "Update User Successfully",
 	})
