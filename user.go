@@ -2,26 +2,39 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
-	_ "github.com/jinzhu/gorm/dialects/sqlite"
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 var db *gorm.DB
 var err error
-var dbName = "reading-club.db"
+var dbName = os.Getenv("DATABASE_URL")
+var dbEngine = "postgres"
 
 // User Model
 type User struct {
-	gorm.Model
-	Name  string `uri:"name" binding:"required"`
-	Email string `uri:"email" binding:"required"`
+	ID           int    `gorm:"AUTO_INCREMENT;primary_key"`
+	Username     string `uri:"name" binding:"required"`
+	Email        string `uri:"email" binding:"required"`
+	GroupName    string
+	DonateStatus int
+	DonateNumber int
+	CreatedTime  time.Time
+	UpdatedTime  time.Time
 }
 
-// InitialMigration : Database Init Operation, create database reading-club.db
+// TableName : table name for struct User
+func (User) TableName() string {
+	return "rc_user"
+}
+
+// InitialMigration : Database Init Operation, connect to database
 func InitialMigration() {
-	db, err = gorm.Open("sqlite3", dbName)
+	db, err = gorm.Open(dbEngine, dbName)
 	if err != nil {
 		fmt.Println(err.Error())
 		panic("Failed to connect to database")
@@ -35,7 +48,7 @@ func InitialMigration() {
 // AllUsers : List All Users
 func AllUsers(c *gin.Context) {
 
-	db, err = gorm.Open("sqlite3", dbName)
+	db, err = gorm.Open(dbEngine, dbName)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
@@ -55,7 +68,7 @@ func AllUsers(c *gin.Context) {
 // NewUser : Add User
 func NewUser(c *gin.Context) {
 
-	db, err := gorm.Open("sqlite3", dbName)
+	db, err := gorm.Open(dbEngine, dbName)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
@@ -67,10 +80,15 @@ func NewUser(c *gin.Context) {
 		c.JSON(400, gin.H{"msg": "parameter missing"})
 		return
 	}
-	name := newUser.Name
+	name := newUser.Username
 	email := newUser.Email
+	groupName := "DefaultGroup"
+	donateStatus := 0
+	donateNumber := 0
+	createdTime := time.Now().UTC()
+	updatedTime := time.Now().UTC()
 
-	db.Create(&User{Name: name, Email: email})
+	db.Create(&User{Username: name, Email: email, GroupName: groupName, DonateStatus: donateStatus, DonateNumber: donateNumber, CreatedTime: createdTime, UpdatedTime: updatedTime})
 
 	c.Writer.Header().Add("Access-Control-Allow-Origin", "*")
 	c.Writer.Header().Add("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
@@ -81,7 +99,7 @@ func NewUser(c *gin.Context) {
 
 //DeleteUser : delete user of the given name
 func DeleteUser(c *gin.Context) {
-	db, err := gorm.Open("sqlite3", dbName)
+	db, err := gorm.Open(dbEngine, dbName)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
@@ -89,14 +107,10 @@ func DeleteUser(c *gin.Context) {
 	defer db.Close()
 
 	var username string
-	if err := c.ShouldBindUri(&username); err != nil {
-		c.JSON(400, gin.H{"msg": "parameter missing"})
-		return
-	}
-	name := username
+	username = c.Param("name")
 
 	var user User
-	db.Where("name = ?", name).Find(&user)
+	db.Where("username = ?", username).Find(&user)
 
 	if user.ID > 0 {
 		db.Delete(&user)
@@ -111,7 +125,7 @@ func DeleteUser(c *gin.Context) {
 
 //UpdateUser : update user by name
 func UpdateUser(c *gin.Context) {
-	db, err := gorm.Open("sqlite3", dbName)
+	db, err := gorm.Open(dbEngine, dbName)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
@@ -124,13 +138,14 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
-	name := updatedUser.Name
+	name := updatedUser.Username
 
 	var user User
-	db.Where("name = ?", name).Find(&user)
+	db.Where("username = ?", name).Find(&user)
 
 	if user.ID > 0 {
 		user.Email = updatedUser.Email
+		user.UpdatedTime = time.Now().UTC()
 		db.Save(&user)
 	}
 
