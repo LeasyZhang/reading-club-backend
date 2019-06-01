@@ -1,19 +1,17 @@
-package main
+package user
 
 import (
 	"fmt"
-	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"reading-club-backend/database"
 )
 
 var db *gorm.DB
 var err error
-var dbName = os.Getenv("DATABASE_URL")
-var dbEngine = "postgres"
 
 // User Model
 type User struct {
@@ -32,23 +30,10 @@ func (User) TableName() string {
 	return "rc_user"
 }
 
-// InitialMigration : Database Init Operation, connect to database
-func InitialMigration() {
-	db, err = gorm.Open(dbEngine, dbName)
-	if err != nil {
-		fmt.Println(err.Error())
-		panic("Failed to connect to database")
-	}
-
-	defer db.Close()
-
-	db.AutoMigrate(&User{})
-}
-
 // AllUsers : List All Users
 func AllUsers(c *gin.Context) {
 
-	db, err = gorm.Open(dbEngine, dbName)
+	db, err = gorm.Open(database.DBEngine, database.DBName)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
@@ -58,8 +43,6 @@ func AllUsers(c *gin.Context) {
 	var users []User
 	db.Find(&users)
 
-	c.Writer.Header().Add("Access-Control-Allow-Origin", "*")
-	c.Writer.Header().Add("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 	c.JSON(200, gin.H{
 		"message": users,
 	})
@@ -68,7 +51,7 @@ func AllUsers(c *gin.Context) {
 // NewUser : Add User
 func NewUser(c *gin.Context) {
 
-	db, err := gorm.Open(dbEngine, dbName)
+	db, err = gorm.Open(database.DBEngine, database.DBName)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
@@ -90,8 +73,6 @@ func NewUser(c *gin.Context) {
 
 	db.Create(&User{Username: name, Email: email, GroupName: groupName, DonateStatus: donateStatus, DonateNumber: donateNumber, CreatedTime: createdTime, UpdatedTime: updatedTime})
 
-	c.Writer.Header().Add("Access-Control-Allow-Origin", "*")
-	c.Writer.Header().Add("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 	c.JSON(200, gin.H{
 		"message": "New User Created!",
 	})
@@ -99,7 +80,7 @@ func NewUser(c *gin.Context) {
 
 //DeleteUser : delete user of the given name
 func DeleteUser(c *gin.Context) {
-	db, err := gorm.Open(dbEngine, dbName)
+	db, err = gorm.Open(database.DBEngine, database.DBName)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
@@ -116,8 +97,6 @@ func DeleteUser(c *gin.Context) {
 		db.Delete(&user)
 	}
 
-	c.Writer.Header().Add("Access-Control-Allow-Origin", "*")
-	c.Writer.Header().Add("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 	c.JSON(200, gin.H{
 		"message": "Delete User Successfully",
 	})
@@ -125,11 +104,11 @@ func DeleteUser(c *gin.Context) {
 
 //UpdateUser : update user by name
 func UpdateUser(c *gin.Context) {
-	db, err := gorm.Open(dbEngine, dbName)
+	db, err = gorm.Open(database.DBEngine, database.DBName)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-
+	
 	defer db.Close()
 
 	var updatedUser User
@@ -149,8 +128,6 @@ func UpdateUser(c *gin.Context) {
 		db.Save(&user)
 	}
 
-	c.Writer.Header().Add("Access-Control-Allow-Origin", "*")
-	c.Writer.Header().Add("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
 	c.JSON(200, gin.H{
 		"message": "Update User Successfully",
 	})
