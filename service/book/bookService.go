@@ -2,6 +2,7 @@ package book
 
 import (
 	"fmt"
+	"net/http"
 	"strconv"
 	"time"
 
@@ -115,4 +116,15 @@ func FindBookByName(c *gin.Context) {
 	}
 
 	c.JSON(200, gin.H{"message": book})
+}
+
+// BorrowBook borrow a book
+func BorrowBook(c *gin.Context) {
+
+	c.JSON(http.StatusAccepted, gin.H{"message": "book successfully borrowed"})
+}
+
+// ReturnBook return a book
+func ReturnBook(c *gin.Context) {
+	c.JSON(http.StatusAccepted, gin.H{"message": "book successfully returned"})
 }
