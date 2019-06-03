@@ -24,6 +24,7 @@ type Book struct {
 	BookName    string `json:"book_name"`
 	Author      string `json:"author"`
 	LeftAmount  int
+	Status		int
 	ISBN        string  `json:"isbn"`
 	DoubanURL   string  `json:"douban_url"`
 	ImageURL    string  `json:"image_url"`
@@ -121,10 +122,19 @@ func FindBookByName(c *gin.Context) {
 // BorrowBook borrow a book
 func BorrowBook(c *gin.Context) {
 
+	//check book status(bookId)
+	//update book left status(bookId)
+	//add a history record(bookId, userId)
+	//return the book user borrowed
+
 	c.JSON(http.StatusAccepted, gin.H{"message": "book successfully borrowed"})
 }
 
 // ReturnBook return a book
 func ReturnBook(c *gin.Context) {
+
+	//update book left amount
+	//update a history record(bookId & userId)
+	//return the book user returned
 	c.JSON(http.StatusAccepted, gin.H{"message": "book successfully returned"})
 }
