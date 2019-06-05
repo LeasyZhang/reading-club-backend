@@ -18,17 +18,24 @@ func handleRequests() {
 	router.GET("/", func(c *gin.Context) {
 		c.JSON(200, gin.H{"msg": "hello, user function is now ready"})
 	})
+	//user api
 	router.GET("/users", user.AllUsers)
 	router.POST("/user/:name/:email", user.NewUser)
 	router.DELETE("/user/:name", user.DeleteUser)
 	router.PUT("/user/:name/:email", user.UpdateUser)
+
+	//book api
 	router.GET("/book/:id", book.ViewBookDetail)
 	router.GET("/search/book/:name", book.FindBookByName)
-	router.GET("/borrow/book/:bookId", book.BorrowBook)
-	router.GET("/return/book/:bookId", book.ReturnBook)
+	router.GET("/books", book.GetAllBooks)
+
+	//history api
 	router.GET("/history/user/:userId", history.GetUserBorrowHistory)
-	router.GET("/books", book.BookList)
 	router.GET("/history/book/:bookId", history.GetBookBorrowHistory)
+
+	//borrow return api
+	router.POST("/borrow", book.BorrowBook)
+	router.POST("/return", book.ReturnBook)
 
 	router.Run()
 }
