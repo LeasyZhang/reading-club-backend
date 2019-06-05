@@ -3,6 +3,7 @@ CREATE TABLE rc_book (
     book_name character varying(200) NOT NULL,
     author character varying(256) NOT NULL,
     left_amount smallint not null DEFAULT 0,
+    book_status SMALLINT NOT NULL DEFAULT 0,
     isbn VARCHAR(100),
     douban_url VARCHAR(512),
     image_url VARCHAR(512),

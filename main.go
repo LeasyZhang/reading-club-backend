@@ -3,10 +3,11 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 
-	"reading-club-backend/service/book"
-	"reading-club-backend/service/user"
 	"reading-club-backend/database"
 	"reading-club-backend/middleware"
+	"reading-club-backend/service/book"
+	"reading-club-backend/service/history"
+	"reading-club-backend/service/user"
 )
 
 func handleRequests() {
@@ -23,6 +24,11 @@ func handleRequests() {
 	router.PUT("/user/:name/:email", user.UpdateUser)
 	router.GET("/book/:id", book.ViewBookDetail)
 	router.GET("/search/book/:name", book.FindBookByName)
+	router.GET("/borrow/book/:bookId", book.BorrowBook)
+	router.GET("/return/book/:bookId", book.ReturnBook)
+	router.GET("/history/user/:userId", history.GetUserBorrowHistory)
+	router.GET("/books", book.BookList)
+	router.GET("/history/book/:bookId", history.GetBookBorrowHistory)
 
 	router.Run()
 }
