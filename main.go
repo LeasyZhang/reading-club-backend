@@ -26,7 +26,9 @@ func handleRequests() {
 	router.GET("/search/book/:name", book.FindBookByName)
 	router.GET("/borrow/book/:bookId", book.BorrowBook)
 	router.GET("/return/book/:bookId", book.ReturnBook)
-	router.GET("user/history/:userId", history.GetUserBorrowHistory)
+	router.GET("/history/user/:userId", history.GetUserBorrowHistory)
+	router.GET("/books", book.BookList)
+	router.GET("/history/book/:bookId", history.GetBookBorrowHistory)
 
 	router.Run()
 }

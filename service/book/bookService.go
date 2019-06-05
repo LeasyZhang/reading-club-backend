@@ -10,6 +10,7 @@ import (
 	"github.com/jinzhu/gorm"
 
 	//use postgres database
+	"reading-club-backend/database"
 	dbConn "reading-club-backend/database"
 
 	_ "github.com/jinzhu/gorm/dialects/postgres"
@@ -24,7 +25,7 @@ type Book struct {
 	BookName    string `json:"book_name"`
 	Author      string `json:"author"`
 	LeftAmount  int
-	Status		int
+	BookStatus  int     `json:"book_status"`
 	ISBN        string  `json:"isbn"`
 	DoubanURL   string  `json:"douban_url"`
 	ImageURL    string  `json:"image_url"`
@@ -53,12 +54,12 @@ func ViewBookDetail(c *gin.Context) {
 	bookID, err := strconv.Atoi(c.Param("id"))
 
 	if err != nil {
-		c.JSON(400, gin.H{"error": "invalid parameter " + c.Param("id")})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid parameter " + c.Param("id")})
 		return
 	}
 
 	if bookID <= 0 {
-		c.JSON(404, gin.H{"error": "the book you are looking for does not exist"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "the book you are looking for does not exist"})
 		return
 	}
 
@@ -68,20 +69,20 @@ func ViewBookDetail(c *gin.Context) {
 
 	for _, err := range errors {
 		if gorm.IsRecordNotFoundError(err) {
-			c.JSON(404, gin.H{"error": "the book you are looking for does not exist"})
+			c.JSON(http.StatusNotFound, gin.H{"error": "the book you are looking for does not exist"})
 			return
 		} else {
-			c.JSON(500, gin.H{"error": err})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 			return
 		}
 	}
 
 	if book.ID <= 0 {
-		c.JSON(404, gin.H{"error": "the book you are looking for does not exist"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "the book you are looking for does not exist"})
 		return
 	}
 
-	c.JSON(200, gin.H{"message": book})
+	c.JSON(http.StatusOK, gin.H{"message": book})
 }
 
 // FindBookByName get book message by book name
@@ -89,7 +90,7 @@ func FindBookByName(c *gin.Context) {
 	db, err = gorm.Open(dbConn.DBEngine, dbConn.DBName)
 	if err != nil {
 		fmt.Println(err.Error())
-		c.JSON(500, gin.H{"error": "Database connection error"})
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Database connection error"})
 		return
 	}
 
@@ -103,20 +104,37 @@ func FindBookByName(c *gin.Context) {
 
 	for _, err := range errors {
 		if gorm.IsRecordNotFoundError(err) {
-			c.JSON(404, gin.H{"error": "the book you are looking for does not exist"})
+			c.JSON(http.StatusNotFound, gin.H{"error": "the book you are looking for does not exist"})
 			return
 		} else {
-			c.JSON(500, gin.H{"error": err})
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err})
 			return
 		}
 	}
 
 	if book.ID <= 0 {
-		c.JSON(404, gin.H{"error": "the book you are looking for does not exist"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "the book you are looking for does not exist"})
 		return
 	}
 
-	c.JSON(200, gin.H{"message": book})
+	c.JSON(http.StatusOK, gin.H{"message": book})
+}
+
+// BookList Get All Books
+func BookList(c *gin.Context) {
+	db, err = gorm.Open(database.DBEngine, database.DBName)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	defer db.Close()
+
+	var bookList []Book
+	db.Find(&bookList)
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": bookList,
+	})
 }
 
 // BorrowBook borrow a book
@@ -127,7 +145,7 @@ func BorrowBook(c *gin.Context) {
 	//add a history record(bookId, userId)
 	//return the book user borrowed
 
-	c.JSON(http.StatusAccepted, gin.H{"message": "book successfully borrowed"})
+	c.JSON(http.StatusOK, gin.H{"message": "book successfully borrowed"})
 }
 
 // ReturnBook return a book
@@ -136,5 +154,5 @@ func ReturnBook(c *gin.Context) {
 	//update book left amount
 	//update a history record(bookId & userId)
 	//return the book user returned
-	c.JSON(http.StatusAccepted, gin.H{"message": "book successfully returned"})
+	c.JSON(http.StatusOK, gin.H{"message": "book successfully returned"})
 }
