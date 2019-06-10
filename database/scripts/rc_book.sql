@@ -9,6 +9,8 @@ CREATE TABLE rc_book (
     image_url VARCHAR(512),
     price DECIMAL(10, 2) not NULL,
     press VARCHAR(256),
+    book_description VARCHAR(256),
+    visibility SMALLINT NOT NULL DEFAULT 1,
     created_time timestamp without time zone,
     updated_time timestamp without time zone
 );
