@@ -25,9 +25,12 @@ func handleRequests() {
 	router.PUT("/user/:name/:email", user.UpdateUser)
 
 	//book api
-	router.GET("/book/:id", book.ViewBookDetail)
+	router.GET("/book/detail/:id", book.ViewBookDetail)
 	router.GET("/search/book/:name", book.FindBookByName)
 	router.GET("/books", book.GetAllBooks)
+	router.POST("/book/add", book.AddBook)
+	router.PUT("/book/update", book.UpdateBookInfo)
+	router.DELETE("/book/delete/:bookId", book.DeleteBook)
 
 	//history api
 	router.GET("/history/user/:userId", history.GetUserBorrowHistory)
