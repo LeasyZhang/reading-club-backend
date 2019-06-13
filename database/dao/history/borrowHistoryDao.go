@@ -56,3 +56,45 @@ func GetUserBorrowedHistory(userName string, bookID int) (entity.BorrowHistory, 
 
 	return bookHistory, nil
 }
+
+// GetUserHistory : get user borrow history by username
+func GetUserHistory(username string) (historyList []entity.BorrowHistory, historyErr *dto.HistoryErrorResponse) {
+
+	db, err = database.GetDBConnection()
+
+	if err != nil {
+		return historyList, &dto.HistoryErrorResponse{ErrorCode: constant.CanNotConnectDatabaseCode, Error: err.Error()}
+	}
+
+	errors := db.Where("user_name = ?", username).Find(&historyList).GetErrors()
+
+	for _, err := range errors {
+		if gorm.IsRecordNotFoundError(err) {
+			return historyList, &dto.HistoryErrorResponse{ErrorCode: constant.HistoryNotFoundCode, Error: constant.HistoryNotFound}
+		}
+		return historyList, &dto.HistoryErrorResponse{ErrorCode: constant.InternalServerErrorCode, Error: constant.InternalServerError}
+	}
+
+	return historyList, nil
+}
+
+// GetBookHistory : get book borrow history by bookID
+func GetBookHistory(bookID int) (historyList []entity.BorrowHistory, historyErr *dto.HistoryErrorResponse) {
+
+	db, err = database.GetDBConnection()
+
+	if err != nil {
+		return historyList, &dto.HistoryErrorResponse{ErrorCode: constant.CanNotConnectDatabaseCode, Error: err.Error()}
+	}
+
+	errors := db.Where("book_id = ?", bookID).Find(&historyList).GetErrors()
+
+	for _, err := range errors {
+		if gorm.IsRecordNotFoundError(err) {
+			return historyList, &dto.HistoryErrorResponse{ErrorCode: constant.HistoryNotFoundCode, Error: constant.HistoryNotFound}
+		}
+		return historyList, &dto.HistoryErrorResponse{ErrorCode: constant.InternalServerErrorCode, Error: constant.InternalServerError}
+	}
+
+	return historyList, nil
+}
