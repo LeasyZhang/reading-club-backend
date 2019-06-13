@@ -16,7 +16,7 @@ var testDBName = "host=localhost port=5432 user=joe.zhang dbname=mydb password=1
 var prodDBName = os.Getenv("DATABASE_URL")
 
 //DBName production : os.Getenv("DATABASE_URL") local: TestDBName
-var DBName = testDBName
+var DBName = prodDBName
 
 //DBEngine engine name for database connection
 var DBEngine = "postgres"
