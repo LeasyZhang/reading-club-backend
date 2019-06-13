@@ -9,7 +9,7 @@ type Book struct {
 	BookName        string `json:"name"`
 	Author          string `json:"author"`
 	LeftAmount      int		`json:"-"`
-	BookStatus      int     `json:"-"`
+	BookStatus      int     `json:"status"`
 	ISBN            string  `json:"ISBN"`
 	DoubanURL       string  `json:"doubanUrl"`
 	ImageURL        string  `json:"imageUrl"`
