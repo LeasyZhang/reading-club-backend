@@ -7,7 +7,6 @@ import (
 	"reading-club-backend/database"
 	"reading-club-backend/middleware"
 	"reading-club-backend/service/history"
-	"reading-club-backend/service/user"
 )
 
 func handleRequests() {
@@ -19,10 +18,10 @@ func handleRequests() {
 		c.JSON(200, gin.H{"msg": "hello, user function is now ready"})
 	})
 	//user api
-	router.GET("/user/list", user.AllUsers)
-	router.POST("/user/add", user.NewUser)
-	router.DELETE("/user/delete/:name", user.DeleteUser)
-	router.POST("/user/update", user.UpdateUser)
+	router.GET("/user/list", api.GetUserList)
+	router.POST("/user/add", api.AddUser)
+	router.DELETE("/user/delete/:name", api.DeleteUser)
+	router.POST("/user/update", api.UpdateUser)
 
 	//book api
 	router.GET("/book/detail/:ID", api.ViewBookDetail)

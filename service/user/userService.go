@@ -1,134 +1,59 @@
 package user
 
 import (
-	"fmt"
 	"time"
 
-	"github.com/gin-gonic/gin"
+	userDao "reading-club-backend/database/dao/user"
+	"reading-club-backend/database/entity"
+	"reading-club-backend/dto"
+
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
-	"reading-club-backend/database"
 )
 
 var db *gorm.DB
 var err error
 
-// User Model
-type User struct {
-	ID           int    `gorm:"AUTO_INCREMENT;primary_key"`
-	Username     string `uri:"name" binding:"required"`
-	Email        string `uri:"email" binding:"required"`
-	GroupName    string
-	DonateStatus int
-	DonateNumber int
-	CreatedTime  time.Time
-	UpdatedTime  time.Time
-}
-
-// TableName : table name for struct User
-func (User) TableName() string {
-	return "rc_user"
-}
-
 // AllUsers : List All Users
-func AllUsers(c *gin.Context) {
+func AllUsers() (userList []entity.User, userError *dto.UserErrorResponse) {
 
-	db, err = gorm.Open(database.DBEngine, database.DBName)
-	if err != nil {
-		fmt.Println(err.Error())
-	}
+	userList, userError = userDao.GetUserList()
 
-	defer db.Close()
-
-	var users []User
-	db.Find(&users)
-
-	c.JSON(200, gin.H{
-		"message": users,
-	})
+	return userList, userError
 }
 
 // NewUser : Add User
-func NewUser(c *gin.Context) {
+func NewUser(username string, email string) (user entity.User, userError *dto.UserErrorResponse) {
 
-	db, err = gorm.Open(database.DBEngine, database.DBName)
-	if err != nil {
-		fmt.Println(err.Error())
-	}
+	var newUser entity.User
 
-	defer db.Close()
+	newUser.Username = username
+	newUser.Email = email
+	newUser.GroupName = "Integration"
+	newUser.DonateStatus = 0
+	newUser.DonateNumber = 0
+	newUser.CreatedTime = time.Now().UTC()
+	newUser.UpdatedTime = time.Now().UTC()
 
-	var newUser User
-	if err := c.ShouldBindUri(&newUser); err != nil {
-		c.JSON(400, gin.H{"msg": "parameter missing"})
-		return
-	}
-	name := newUser.Username
-	email := newUser.Email
-	groupName := "DefaultGroup"
-	donateStatus := 0
-	donateNumber := 0
-	createdTime := time.Now().UTC()
-	updatedTime := time.Now().UTC()
+	user, userError = userDao.SaveOrUpdate(&newUser)
 
-	db.Create(&User{Username: name, Email: email, GroupName: groupName, DonateStatus: donateStatus, DonateNumber: donateNumber, CreatedTime: createdTime, UpdatedTime: updatedTime})
-
-	c.JSON(200, gin.H{
-		"message": "New User Created!",
-	})
+	return newUser, userError
 }
 
 //DeleteUser : delete user of the given name
-func DeleteUser(c *gin.Context) {
-	db, err = gorm.Open(database.DBEngine, database.DBName)
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-
-	defer db.Close()
-
-	var username string
-	username = c.Param("name")
-
-	var user User
-	db.Where("username = ?", username).Find(&user)
-
-	if user.ID > 0 {
-		db.Delete(&user)
-	}
-
-	c.JSON(200, gin.H{
-		"message": "Delete User Successfully",
-	})
+func DeleteUser(username string) {
+	userDao.DeleteUser(username)
 }
 
 //UpdateUser : update user by name
-func UpdateUser(c *gin.Context) {
-	db, err = gorm.Open(database.DBEngine, database.DBName)
-	if err != nil {
-		fmt.Println(err.Error())
-	}
-	
-	defer db.Close()
+func UpdateUser(email string, username string) (user entity.User, userError *dto.UserErrorResponse) {
 
-	var updatedUser User
-	if err := c.ShouldBindUri(&updatedUser); err != nil {
-		c.JSON(400, gin.H{"msg": "parameter missing"})
-		return
+	user, userError = userDao.GetUserByName(username)
+	if userError != nil {
+		return user, userError
 	}
 
-	name := updatedUser.Username
-
-	var user User
-	db.Where("username = ?", name).Find(&user)
-
-	if user.ID > 0 {
-		user.Email = updatedUser.Email
-		user.UpdatedTime = time.Now().UTC()
-		db.Save(&user)
-	}
-
-	c.JSON(200, gin.H{
-		"message": "Update User Successfully",
-	})
+	user.Email = email
+	user, userError = userDao.SaveOrUpdate(&user)
+	return user, userError
 }
