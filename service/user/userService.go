@@ -7,12 +7,8 @@ import (
 	"reading-club-backend/database/entity"
 	"reading-club-backend/dto"
 
-	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
-
-var db *gorm.DB
-var err error
 
 // AllUsers : List All Users
 func AllUsers() (userList []entity.User, userError *dto.UserErrorResponse) {

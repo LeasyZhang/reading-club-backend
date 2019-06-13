@@ -6,7 +6,6 @@ import (
 	"reading-club-backend/api"
 	"reading-club-backend/database"
 	"reading-club-backend/middleware"
-	"reading-club-backend/service/history"
 )
 
 func handleRequests() {
@@ -15,7 +14,7 @@ func handleRequests() {
 	router.Use(middleware.AllowCORS())
 
 	router.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{"msg": "hello, user function is now ready"})
+		c.JSON(200, gin.H{"message": "hello~~"})
 	})
 	//user api
 	router.GET("/user/list", api.GetUserList)
@@ -35,8 +34,8 @@ func handleRequests() {
 	router.POST("/book/return", api.ReturnBook)
 
 	//history api
-	router.GET("/history/user/:userName", history.GetUserBorrowHistory)
-	router.GET("/history/book/:bookID", history.GetBookBorrowHistory)
+	router.GET("/history/user/:username", api.GetUserHistory)
+	router.GET("/history/book/:bookID", api.GetBookHistory)
 
 	//auth api
 	router.POST("/login", api.Login)
