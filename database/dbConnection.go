@@ -32,3 +32,13 @@ func InitialDatabase() {
 
 	database.DB().Ping()
 }
+
+// GetDBConnection get database connection
+func GetDBConnection() (db *gorm.DB, err error) {
+	db, err = gorm.Open(DBEngine, DBName)
+	if err != nil {
+		return nil, err
+	}
+
+	return db, err
+}
