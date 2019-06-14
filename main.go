@@ -38,7 +38,8 @@ func handleRequests() {
 	router.GET("/history/book/:bookID", api.GetBookHistory)
 
 	//auth api
-	router.POST("/login", api.Login)
+	loginHandler, _ := middleware.AuthMiddleWare()
+	router.POST("/login", loginHandler.LoginHandler)
 	router.POST("/logout", api.Logout)
 
 	router.Run()

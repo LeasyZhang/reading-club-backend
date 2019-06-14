@@ -53,3 +53,8 @@ func UpdateUser(email string, username string) (user entity.User, userError *dto
 	user, userError = userDao.SaveOrUpdate(&user)
 	return user, userError
 }
+
+// ValidateUser : validate login user
+func ValidateUser(username string, password string) bool {
+	return userDao.FindUserByNameAndPassword(username, password)
+}

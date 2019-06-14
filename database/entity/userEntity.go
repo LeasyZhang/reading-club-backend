@@ -8,6 +8,7 @@ import (
 type User struct {
 	ID           int `gorm:"AUTO_INCREMENT;primary_key"`
 	Username     string
+	Password     string `json:"-"`
 	Email        string
 	GroupName    string
 	DonateStatus int

@@ -10,6 +10,7 @@ import (
 	"reading-club-backend/constant"
 	"reading-club-backend/database"
 	"reading-club-backend/dto"
+	"reading-club-backend/util"
 )
 
 var db *gorm.DB
@@ -89,4 +90,25 @@ func DeleteUser(username string) {
 	}
 
 	db.Delete(&user)
+}
+
+// FindUserByNameAndPassword : find user by given name and password
+func FindUserByNameAndPassword(username string, password string) bool {
+
+	encoded := util.Encrypt(password)
+	db, err := database.GetDBConnection()
+
+	if err != nil {
+		fmt.Println(err)
+		return false
+	}
+
+	var user entity.User
+	errors := db.Where("user_name ~* ? and password = ?", username, encoded).Find(&user).GetErrors()
+	for _, err := range errors {
+		fmt.Println(err)
+		return false
+	}
+
+	return true
 }
