@@ -26,7 +26,7 @@ func AuthMiddleWare() (*jwt.GinJWTMiddleware, error) {
 	var port = os.Getenv("PORT")
 	var identityKey = "id"
 	if port == "" {
-		port = "8080"
+		port = "80"
 	}
 
 	authMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
