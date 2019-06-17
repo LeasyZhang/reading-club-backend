@@ -13,3 +13,4 @@
 bin/
 .docker_build/
 vendor/
+.idea/
