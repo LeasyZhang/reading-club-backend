@@ -44,12 +44,3 @@ func Encrypt(plainText string) string {
 	hexStr := hex.EncodeToString(cipherText)
 	return string(hexStr)
 }
-
-// func main() {
-// 	origin := "RC123456"
-
-// 	encoded := Encrypt(origin)
-// 	fmt.Println(encoded)
-
-// 	fmt.Println(Decrypt(encoded))
-// }
