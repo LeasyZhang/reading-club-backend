@@ -31,7 +31,6 @@ func SaveOrUpdate(user *entity.User) (tuser entity.User, userError *dto.UserErro
 // GetUserByName get user by user name
 func GetUserByName(userName string) (entity.User, *dto.UserErrorResponse) {
 	var userRsp entity.User
-	var errorRsp dto.UserErrorResponse
 
 	db, err = database.GetDBConnection()
 
@@ -39,13 +38,9 @@ func GetUserByName(userName string) (entity.User, *dto.UserErrorResponse) {
 
 	for _, err := range errors {
 		if gorm.IsRecordNotFoundError(err) {
-			errorRsp.Error = constant.UserNotFound
-			errorRsp.ErrorCode = constant.UserNotFoundCode
-			return userRsp, &errorRsp
+			return userRsp, &dto.UserErrorResponse{Error: constant.UserNotFound, ErrorCode: constant.UserNotFoundCode}
 		}
-		errorRsp.Error = err.Error()
-		errorRsp.ErrorCode = constant.InternalServerErrorCode
-		return userRsp, &errorRsp
+		return userRsp, &dto.UserErrorResponse{Error: err.Error(), ErrorCode: constant.InternalServerErrorCode}
 	}
 
 	return userRsp, nil

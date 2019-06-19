@@ -18,13 +18,10 @@ var err error
 // GetBookByID get book detail by unique id
 func GetBookByID(bookID int) (book entity.Book, bookError *dto.BookErrorResponse) {
 	var bookRsp entity.Book
-	var errorResponse dto.BookErrorResponse
 
 	db, err = database.GetDBConnection()
 	if err != nil {
-		errorResponse.Error = constant.CanNotConnectDatabase
-		errorResponse.ErrorCode = constant.CanNotConnectDatabaseCode
-		return bookRsp, &errorResponse
+		return bookRsp, &dto.BookErrorResponse{Error: constant.CanNotConnectDatabase, ErrorCode: constant.CanNotConnectDatabaseCode}
 	}
 
 	defer db.Close()
@@ -33,19 +30,13 @@ func GetBookByID(bookID int) (book entity.Book, bookError *dto.BookErrorResponse
 
 	for _, err := range errors {
 		if gorm.IsRecordNotFoundError(err) {
-			errorResponse.Error = constant.BookNotFound
-			errorResponse.ErrorCode = constant.BookNotFoundCode
-			return bookRsp, &errorResponse
+			return bookRsp, &dto.BookErrorResponse{Error: constant.BookNotFound, ErrorCode: constant.BookNotFoundCode}
 		}
-		errorResponse.Error = constant.InternalServerError
-		errorResponse.ErrorCode = constant.InternalServerErrorCode
-		return bookRsp, &errorResponse
+		return bookRsp, &dto.BookErrorResponse{Error: constant.InternalServerError, ErrorCode: constant.InternalServerErrorCode}
 	}
 
 	if bookRsp.ID <= 0 {
-		errorResponse.Error = constant.BookNotFound
-		errorResponse.ErrorCode = constant.BookNotFoundCode
-		return bookRsp, &errorResponse
+		return bookRsp, &dto.BookErrorResponse{Error: constant.BookNotFound, ErrorCode: constant.BookNotFoundCode}
 	}
 
 	return bookRsp, nil
@@ -59,9 +50,7 @@ func GetBookByName(bookName string) (entity.Book, *dto.BookErrorResponse) {
 
 	db, err = database.GetDBConnection()
 	if err != nil {
-		errorResponse.Error = constant.CanNotConnectDatabase
-		errorResponse.ErrorCode = constant.CanNotConnectDatabaseCode
-		return bookRsp, &errorResponse
+		return bookRsp, &dto.BookErrorResponse{Error: constant.CanNotConnectDatabase, ErrorCode: constant.CanNotConnectDatabaseCode}
 	}
 
 	defer db.Close()
@@ -72,13 +61,9 @@ func GetBookByName(bookName string) (entity.Book, *dto.BookErrorResponse) {
 	fmt.Println(errorResponse)
 	for _, err := range errors {
 		if gorm.IsRecordNotFoundError(err) {
-			errorResponse.Error = constant.BookNotFound
-			errorResponse.ErrorCode = constant.BookNotFoundCode
-			return bookRsp, &errorResponse
+			return bookRsp, &dto.BookErrorResponse{Error: constant.BookNotFound, ErrorCode: constant.BookNotFoundCode}
 		}
-		errorResponse.Error = constant.InternalServerError
-		errorResponse.ErrorCode = constant.InternalServerErrorCode
-		return bookRsp, &errorResponse
+		return bookRsp, &dto.BookErrorResponse{Error: constant.InternalServerError, ErrorCode: constant.InternalServerErrorCode}
 	}
 
 	return bookRsp, nil
@@ -88,9 +73,7 @@ func GetBookByName(bookName string) (entity.Book, *dto.BookErrorResponse) {
 func GetAllBooks() (bookList []entity.Book, errorResponse *dto.BookErrorResponse) {
 	db, err = database.GetDBConnection()
 	if err != nil {
-		errorResponse.Error = constant.CanNotConnectDatabase
-		errorResponse.ErrorCode = constant.CanNotConnectDatabaseCode
-		return bookList, errorResponse
+		return bookList, &dto.BookErrorResponse{Error: constant.CanNotConnectDatabase, ErrorCode: constant.CanNotConnectDatabaseCode}
 	}
 
 	defer db.Close()
@@ -100,7 +83,7 @@ func GetAllBooks() (bookList []entity.Book, errorResponse *dto.BookErrorResponse
 	for _, err := range errors {
 		errorResponse.Error = err.Error()
 		errorResponse.ErrorCode = constant.InternalServerErrorCode
-		return bookList, errorResponse
+		return bookList, &dto.BookErrorResponse{Error: constant.CanNotConnectDatabase, ErrorCode: constant.CanNotConnectDatabaseCode}
 	}
 
 	return bookList, nil
