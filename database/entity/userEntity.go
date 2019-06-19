@@ -6,15 +6,15 @@ import (
 
 // User Model
 type User struct {
-	ID           int `gorm:"AUTO_INCREMENT;primary_key"`
-	Username     string
-	Password     string `json:"-"`
-	Email        string
-	GroupName    string
-	DonateStatus int
-	DonateNumber int
-	CreatedTime  time.Time
-	UpdatedTime  time.Time
+	ID           int       `gorm:"AUTO_INCREMENT;primary_key"`
+	UserName     string    `json:"username"`
+	Password     string    `json:"-"`
+	Email        string    `json:"email"`
+	GroupName    string    `json:"group"`
+	DonateStatus int       `json:"-"`
+	DonateNumber int       `json:"-"`
+	CreatedTime  time.Time `json:"createdTime"`
+	UpdatedTime  time.Time `json:"updatedTime"`
 }
 
 // TableName history table name
