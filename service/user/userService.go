@@ -23,7 +23,7 @@ func NewUser(username string, email string) (user entity.User, userError *dto.Us
 
 	var newUser entity.User
 
-	newUser.Username = username
+	newUser.UserName = username
 	newUser.Email = email
 	newUser.GroupName = "Integration"
 	newUser.DonateStatus = 0
