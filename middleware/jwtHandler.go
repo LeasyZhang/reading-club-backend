@@ -56,6 +56,7 @@ func AuthMiddleWare() (*jwt.GinJWTMiddleware, error) {
 				fmt.Println(err)
 				return "", jwt.ErrMissingLoginValues
 			}
+			fmt.Println(loginVals)
 			userID := loginVals.Username
 			password := loginVals.Password
 
