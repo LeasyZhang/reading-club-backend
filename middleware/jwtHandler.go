@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"fmt"
 	"os"
 	"time"
 
@@ -51,7 +52,8 @@ func AuthMiddleWare() (*jwt.GinJWTMiddleware, error) {
 		},
 		Authenticator: func(c *gin.Context) (interface{}, error) {
 			var loginVals Login
-			if err := c.ShouldBind(&loginVals); err != nil {
+			if err := c.ShouldBindJSON(&loginVals); err != nil {
+				fmt.Println(err)
 				return "", jwt.ErrMissingLoginValues
 			}
 			userID := loginVals.Username
