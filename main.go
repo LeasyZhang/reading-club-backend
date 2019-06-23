@@ -19,7 +19,7 @@ func handleRequests() {
 	//user api
 	router.GET("/user/list", api.GetUserList)
 	router.POST("/user/add", api.AddUser)
-	router.DELETE("/user/delete/:name", api.DeleteUser)
+	router.POST("/user/delete/:name", api.DeleteUser)
 	router.POST("/user/update", api.UpdateUser)
 
 	//book api
@@ -28,7 +28,7 @@ func handleRequests() {
 	router.GET("/book/list", api.GetAllBooks)
 	router.POST("/book/add", api.AddBook)
 	router.POST("/book/update", api.UpdateBook)
-	router.DELETE("/book/delete/:bookID", api.DeleteBook)
+	router.POST("/book/delete/:bookID", api.DeleteBook)
 	//borrow return api
 	router.POST("/book/borrow", api.BorrowBook)
 	router.POST("/book/return", api.ReturnBook)
