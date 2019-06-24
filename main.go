@@ -9,6 +9,7 @@ import (
 )
 
 func handleRequests() {
+	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 
 	router.Use(middleware.AllowCORS())

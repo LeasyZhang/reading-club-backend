@@ -8,11 +8,9 @@ import (
 	"github.com/jinzhu/gorm"
 
 	"reading-club-backend/constant"
-	"reading-club-backend/database"
+	db "reading-club-backend/database"
 	"reading-club-backend/dto"
 )
-
-var db = database.Conn
 
 var err error
 
@@ -20,7 +18,7 @@ var err error
 func GetBookByID(bookID int) (book entity.Book, bookError *dto.BookErrorResponse) {
 	var bookRsp entity.Book
 
-	errors := db.Where("id = ?", bookID).First(&bookRsp).GetErrors()
+	errors := db.Conn.Where("id = ?", bookID).First(&bookRsp).GetErrors()
 
 	for _, err := range errors {
 		if gorm.IsRecordNotFoundError(err) {
@@ -43,7 +41,7 @@ func GetBookByName(bookName string) (entity.Book, *dto.BookErrorResponse) {
 	var errorResponse dto.BookErrorResponse
 
 	visible := 1
-	errors := db.Where("book_name = ? and visibility = ?", bookName, visible).First(&bookRsp).GetErrors()
+	errors := db.Conn.Where("book_name = ? and visibility = ?", bookName, visible).First(&bookRsp).GetErrors()
 
 	fmt.Println(errorResponse)
 	for _, err := range errors {
@@ -59,7 +57,7 @@ func GetBookByName(bookName string) (entity.Book, *dto.BookErrorResponse) {
 // GetAllBooks : get all books
 func GetAllBooks() (bookList []entity.Book, errorResponse *dto.BookErrorResponse) {
 	visible := 1
-	errors := db.Where("visibility = ?", visible).Find(&bookList).GetErrors()
+	errors := db.Conn.Where("visibility = ?", visible).Find(&bookList).GetErrors()
 
 	for _, err := range errors {
 		return bookList, &dto.BookErrorResponse{Error: err.Error(), ErrorCode: constant.InternalServerErrorCode}
@@ -70,7 +68,7 @@ func GetAllBooks() (bookList []entity.Book, errorResponse *dto.BookErrorResponse
 
 // SaveOrUpdate save or update book entity
 func SaveOrUpdate(book *entity.Book) {
-	db.Save(book)
+	db.Conn.Save(book)
 }
 
 // DeleteBookByID delete a book by id
