@@ -13,6 +13,7 @@ import (
 )
 
 var db = database.Conn
+
 var err error
 
 // GetBookByID get book detail by unique id
