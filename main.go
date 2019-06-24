@@ -46,7 +46,12 @@ func handleRequests() {
 }
 
 func main() {
-	database.InitialDatabase()
+	db, err := database.GetDBConnection()
+
+	if err != nil {
+		panic("fatal error, failed to connect to database")
+	}
+	defer db.Close()
 
 	handleRequests()
 }

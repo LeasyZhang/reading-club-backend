@@ -8,7 +8,8 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
-var database *gorm.DB
+//Conn database connection
+var Conn *gorm.DB
 var err error
 
 //TestDBName test database connection(local database)
@@ -21,25 +22,14 @@ var DBName = prodDBName
 //DBEngine engine name for database connection
 var DBEngine = "postgres"
 
-//InitialDatabase open database connection
-func InitialDatabase() {
-	database, err = gorm.Open(DBEngine, DBName)
+//GetDBConnection open database connection
+func GetDBConnection() (*gorm.DB, error) {
+	Conn, err = gorm.Open(DBEngine, DBName)
 	if err != nil {
 		panic("Failed to connect to database " + err.Error())
 	}
-
-	defer database.Close()
-
-	database.DB().Ping()
-}
-
-// GetDBConnection get database connection
-func GetDBConnection() (db *gorm.DB, err error) {
-	db, err = gorm.Open(DBEngine, DBName)
-	if err != nil {
-		return nil, err
-	}
-	db.LogMode(true)
-
-	return db, err
+	Conn.DB().SetMaxIdleConns(20)
+	Conn.DB().SetMaxOpenConns(100)
+	Conn.DB().Ping()
+	return Conn, err
 }

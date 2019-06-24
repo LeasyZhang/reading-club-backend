@@ -12,19 +12,12 @@ import (
 	"reading-club-backend/dto"
 )
 
-var db *gorm.DB
+var db = database.Conn
 var err error
 
 // GetBookByID get book detail by unique id
 func GetBookByID(bookID int) (book entity.Book, bookError *dto.BookErrorResponse) {
 	var bookRsp entity.Book
-
-	db, err = database.GetDBConnection()
-	if err != nil {
-		return bookRsp, &dto.BookErrorResponse{Error: constant.CanNotConnectDatabase, ErrorCode: constant.CanNotConnectDatabaseCode}
-	}
-
-	defer db.Close()
 
 	errors := db.Where("id = ?", bookID).First(&bookRsp).GetErrors()
 
@@ -48,13 +41,6 @@ func GetBookByName(bookName string) (entity.Book, *dto.BookErrorResponse) {
 	var bookRsp entity.Book
 	var errorResponse dto.BookErrorResponse
 
-	db, err = database.GetDBConnection()
-	if err != nil {
-		return bookRsp, &dto.BookErrorResponse{Error: constant.CanNotConnectDatabase, ErrorCode: constant.CanNotConnectDatabaseCode}
-	}
-
-	defer db.Close()
-
 	visible := 1
 	errors := db.Where("book_name = ? and visibility = ?", bookName, visible).First(&bookRsp).GetErrors()
 
@@ -71,12 +57,6 @@ func GetBookByName(bookName string) (entity.Book, *dto.BookErrorResponse) {
 
 // GetAllBooks : get all books
 func GetAllBooks() (bookList []entity.Book, errorResponse *dto.BookErrorResponse) {
-	db, err = database.GetDBConnection()
-	if err != nil {
-		return bookList, &dto.BookErrorResponse{Error: constant.CanNotConnectDatabase, ErrorCode: constant.CanNotConnectDatabaseCode}
-	}
-
-	defer db.Close()
 	visible := 1
 	errors := db.Where("visibility = ?", visible).Find(&bookList).GetErrors()
 
@@ -89,11 +69,6 @@ func GetAllBooks() (bookList []entity.Book, errorResponse *dto.BookErrorResponse
 
 // SaveOrUpdate save or update book entity
 func SaveOrUpdate(book *entity.Book) {
-	db, err = database.GetDBConnection()
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
 	db.Save(book)
 }
 
