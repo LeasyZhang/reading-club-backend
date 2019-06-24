@@ -81,9 +81,7 @@ func GetAllBooks() (bookList []entity.Book, errorResponse *dto.BookErrorResponse
 	errors := db.Where("visibility = ?", visible).Find(&bookList).GetErrors()
 
 	for _, err := range errors {
-		errorResponse.Error = err.Error()
-		errorResponse.ErrorCode = constant.InternalServerErrorCode
-		return bookList, &dto.BookErrorResponse{Error: constant.CanNotConnectDatabase, ErrorCode: constant.CanNotConnectDatabaseCode}
+		return bookList, &dto.BookErrorResponse{Error: err.Error(), ErrorCode: constant.InternalServerErrorCode}
 	}
 
 	return bookList, nil
