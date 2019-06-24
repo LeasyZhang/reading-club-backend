@@ -6,16 +6,15 @@ import (
 	"github.com/jinzhu/gorm"
 
 	"reading-club-backend/constant"
-	"reading-club-backend/database"
+	db "reading-club-backend/database"
 	"reading-club-backend/dto"
 )
 
-var db = database.Conn
 var err error
 
 // SaveOrUpdate save or update borrow history entity
 func SaveOrUpdate(history *entity.BorrowHistory) {
-	db.Save(history)
+	db.Conn.Save(history)
 }
 
 // GetUserBorrowedHistory get user borrow history by username bookid
@@ -27,7 +26,7 @@ func GetUserBorrowedHistory(userName string, bookID int) (entity.BorrowHistory, 
 		return bookHistory, &dto.HistoryErrorResponse{ErrorCode: constant.CanNotConnectDatabaseCode, Error: constant.CanNotConnectDatabase}
 	}
 
-	bookErros := db.Where("user_name = ? and book_id = ? and history_status = ?", userName, bookID, constant.BookFree).First(&bookHistory).GetErrors()
+	bookErros := db.Conn.Where("user_name = ? and book_id = ? and history_status = ?", userName, bookID, constant.BookFree).First(&bookHistory).GetErrors()
 
 	for _, err := range bookErros {
 		if gorm.IsRecordNotFoundError(err) {
@@ -43,7 +42,7 @@ func GetUserBorrowedHistory(userName string, bookID int) (entity.BorrowHistory, 
 // GetUserHistory : get user borrow history by username
 func GetUserHistory(username string) (historyList []entity.BorrowHistory, historyErr *dto.HistoryErrorResponse) {
 
-	errors := db.Where("user_name = ?", username).Find(&historyList).GetErrors()
+	errors := db.Conn.Where("user_name = ?", username).Find(&historyList).GetErrors()
 
 	for _, err := range errors {
 		if gorm.IsRecordNotFoundError(err) {
@@ -58,7 +57,7 @@ func GetUserHistory(username string) (historyList []entity.BorrowHistory, histor
 // GetBookHistory : get book borrow history by bookID
 func GetBookHistory(bookID int) (historyList []entity.BorrowHistory, historyErr *dto.HistoryErrorResponse) {
 
-	errors := db.Where("book_id = ?", bookID).Find(&historyList).GetErrors()
+	errors := db.Conn.Where("book_id = ?", bookID).Find(&historyList).GetErrors()
 
 	for _, err := range errors {
 		if gorm.IsRecordNotFoundError(err) {
