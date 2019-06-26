@@ -1,6 +1,8 @@
 package main
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 
 	"reading-club-backend/api"
@@ -9,7 +11,7 @@ import (
 )
 
 func handleRequests() {
-	gin.SetMode(gin.ReleaseMode)
+	gin.SetMode(gin.DebugMode)
 	router := gin.Default()
 
 	router.Use(middleware.AllowCORS())
@@ -23,6 +25,19 @@ func handleRequests() {
 	router.POST("/user/delete/:name", api.DeleteUser)
 	router.POST("/user/update", api.UpdateUser)
 
+	router.OPTIONS("/user/list", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "success"})
+	})
+	router.OPTIONS("/user/add", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "success"})
+	})
+	router.OPTIONS("/user/delete/:name", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "success"})
+	})
+	router.OPTIONS("/user/add/update", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "success"})
+	})
+
 	//book api
 	router.GET("/book/detail/:ID", api.ViewBookDetail)
 	router.GET("/book/search", api.SearchBook)
@@ -34,6 +49,31 @@ func handleRequests() {
 	router.POST("/book/borrow", api.BorrowBook)
 	router.POST("/book/return", api.ReturnBook)
 
+	router.OPTIONS("/book/detail/:ID", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "success"})
+	})
+	router.OPTIONS("/book/search", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "success"})
+	})
+	router.OPTIONS("/book/list", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "success"})
+	})
+	router.OPTIONS("/book/add", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "success"})
+	})
+	router.OPTIONS("/book/update", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "success"})
+	})
+	router.OPTIONS("/book/delete/:bookID", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "success"})
+	})
+	router.OPTIONS("/book/borrow", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "success"})
+	})
+	router.OPTIONS("/book/return", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "success"})
+	})
+
 	//history api
 	router.GET("/history/user/:username", api.GetUserHistory)
 	router.GET("/history/book/:bookID", api.GetBookHistory)
@@ -42,6 +82,13 @@ func handleRequests() {
 	loginHandler, _ := middleware.AuthMiddleWare()
 	router.POST("/login", loginHandler.LoginHandler)
 	router.POST("/logout", api.Logout)
+
+	router.OPTIONS("/login", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "success"})
+	})
+	router.OPTIONS("/logout", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "success"})
+	})
 
 	router.Run()
 }
