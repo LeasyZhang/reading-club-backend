@@ -25,7 +25,7 @@ type User struct {
 // AuthMiddleWare jwt auth middle ware
 func AuthMiddleWare() (*jwt.GinJWTMiddleware, error) {
 	var port = os.Getenv("PORT")
-	var identityKey = "id"
+	var identityKey = "name"
 	if port == "" {
 		port = "80"
 	}
@@ -47,7 +47,7 @@ func AuthMiddleWare() (*jwt.GinJWTMiddleware, error) {
 		IdentityHandler: func(c *gin.Context) interface{} {
 			claims := jwt.ExtractClaims(c)
 			return &User{
-				UserName: claims["id"].(string),
+				UserName: claims[identityKey].(string),
 			}
 		},
 		Authenticator: func(c *gin.Context) (interface{}, error) {
@@ -56,7 +56,6 @@ func AuthMiddleWare() (*jwt.GinJWTMiddleware, error) {
 				fmt.Println(err)
 				return "", jwt.ErrMissingLoginValues
 			}
-			fmt.Println(loginVals)
 			userID := loginVals.Username
 			password := loginVals.Password
 
@@ -69,7 +68,7 @@ func AuthMiddleWare() (*jwt.GinJWTMiddleware, error) {
 			return nil, jwt.ErrFailedAuthentication
 		},
 		Authorizator: func(data interface{}, c *gin.Context) bool {
-			if v, ok := data.(*User); ok && v.UserName == "admin" {
+			if _, ok := data.(*User); ok {
 				return true
 			}
 
@@ -81,22 +80,11 @@ func AuthMiddleWare() (*jwt.GinJWTMiddleware, error) {
 				"message": message,
 			})
 		},
-		// TokenLookup is a string in the form of "<source>:<name>" that is used
-		// to extract token from the request.
-		// Optional. Default value "header:Authorization".
-		// Possible values:
-		// - "header:<name>"
-		// - "query:<name>"
-		// - "cookie:<name>"
-		// - "param:<name>"
-		TokenLookup: "header: Authorization, query: token, cookie: jwt",
-		// TokenLookup: "query:token",
-		// TokenLookup: "cookie:token",
 
-		// TokenHeadName is a string in the header. Default value is "Bearer"
+		TokenLookup: "header: Authorization, query: token, cookie: jwt",
+
 		TokenHeadName: "Bearer",
 
-		// TimeFunc provides the current time. You can override it to use another time value. This is useful for testing or if your server uses a different time zone than your tokens.
 		TimeFunc: time.Now,
 	})
 

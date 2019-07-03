@@ -15,11 +15,11 @@ import (
 var err error
 
 // SaveOrUpdate save or update user entity
-func SaveOrUpdate(user *entity.User) (tuser entity.User, userError *dto.UserErrorResponse) {
+func SaveOrUpdate(user *entity.User) (entity.User, *dto.UserErrorResponse) {
 
-	db.Conn.Save(tuser)
+	db.Conn.Save(user)
 
-	return tuser, nil
+	return *user, nil
 }
 
 // GetUserByName get user by user name
