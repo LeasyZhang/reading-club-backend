@@ -1,8 +1,6 @@
 package main
 
 import (
-	"net/http"
-
 	"github.com/gin-gonic/gin"
 
 	"reading-club-backend/api"
@@ -25,18 +23,18 @@ func handleRequests() {
 	router.POST("/user/delete/:name", api.DeleteUser)
 	router.POST("/user/update", api.UpdateUser)
 
-	router.OPTIONS("/user/list", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "success"})
-	})
-	router.OPTIONS("/user/add", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "success"})
-	})
-	router.OPTIONS("/user/delete/:name", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "success"})
-	})
-	router.OPTIONS("/user/add/update", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "success"})
-	})
+	// router.OPTIONS("/user/list", func(c *gin.Context) {
+	// 	c.JSON(http.StatusOK, gin.H{"message": "success"})
+	// })
+	// router.OPTIONS("/user/add", func(c *gin.Context) {
+	// 	c.JSON(http.StatusOK, gin.H{"message": "success"})
+	// })
+	// router.OPTIONS("/user/delete/:name", func(c *gin.Context) {
+	// 	c.JSON(http.StatusOK, gin.H{"message": "success"})
+	// })
+	// router.OPTIONS("/user/add/update", func(c *gin.Context) {
+	// 	c.JSON(http.StatusOK, gin.H{"message": "success"})
+	// })
 
 	//book api
 	router.GET("/book/detail/:ID", api.ViewBookDetail)
@@ -49,30 +47,30 @@ func handleRequests() {
 	router.POST("/book/borrow", api.BorrowBook)
 	router.POST("/book/return", api.ReturnBook)
 
-	router.OPTIONS("/book/detail/:ID", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "success"})
-	})
-	router.OPTIONS("/book/search", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "success"})
-	})
-	router.OPTIONS("/book/list", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "success"})
-	})
-	router.OPTIONS("/book/add", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "success"})
-	})
-	router.OPTIONS("/book/update", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "success"})
-	})
-	router.OPTIONS("/book/delete/:bookID", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "success"})
-	})
-	router.OPTIONS("/book/borrow", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "success"})
-	})
-	router.OPTIONS("/book/return", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "success"})
-	})
+	// router.OPTIONS("/book/detail/:ID", func(c *gin.Context) {
+	// 	c.JSON(http.StatusOK, gin.H{"message": "success"})
+	// })
+	// router.OPTIONS("/book/search", func(c *gin.Context) {
+	// 	c.JSON(http.StatusOK, gin.H{"message": "success"})
+	// })
+	// router.OPTIONS("/book/list", func(c *gin.Context) {
+	// 	c.JSON(http.StatusOK, gin.H{"message": "success"})
+	// })
+	// router.OPTIONS("/book/add", func(c *gin.Context) {
+	// 	c.JSON(http.StatusOK, gin.H{"message": "success"})
+	// })
+	// router.OPTIONS("/book/update", func(c *gin.Context) {
+	// 	c.JSON(http.StatusOK, gin.H{"message": "success"})
+	// })
+	// router.OPTIONS("/book/delete/:bookID", func(c *gin.Context) {
+	// 	c.JSON(http.StatusOK, gin.H{"message": "success"})
+	// })
+	// router.OPTIONS("/book/borrow", func(c *gin.Context) {
+	// 	c.JSON(http.StatusOK, gin.H{"message": "success"})
+	// })
+	// router.OPTIONS("/book/return", func(c *gin.Context) {
+	// 	c.JSON(http.StatusOK, gin.H{"message": "success"})
+	// })
 
 	//history api
 	router.GET("/history/user/:username", api.GetUserHistory)
@@ -83,12 +81,16 @@ func handleRequests() {
 	router.POST("/login", loginHandler.LoginHandler)
 	router.POST("/logout", api.Logout)
 
-	router.OPTIONS("/login", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "success"})
-	})
-	router.OPTIONS("/logout", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "success"})
-	})
+	router.POST("/feature/enable/:name", api.EnableFeature)
+	router.POST("/feature/disable/:name", api.DisableFeature)
+	router.POST("/feature/add/:name", api.AddFeature)
+
+	// router.OPTIONS("/login", func(c *gin.Context) {
+	// 	c.JSON(http.StatusOK, gin.H{"message": "success"})
+	// })
+	// router.OPTIONS("/logout", func(c *gin.Context) {
+	// 	c.JSON(http.StatusOK, gin.H{"message": "success"})
+	// })
 
 	router.Run()
 }
