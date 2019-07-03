@@ -19,9 +19,6 @@ func handleRequests() {
 	})
 	//user api
 	router.GET("/user/list", api.GetUserList)
-	router.POST("/user/add", api.AddUser)
-	router.POST("/user/delete/:name", api.DeleteUser)
-	router.POST("/user/update", api.UpdateUser)
 
 	// router.OPTIONS("/user/list", func(c *gin.Context) {
 	// 	c.JSON(http.StatusOK, gin.H{"message": "success"})
@@ -40,12 +37,6 @@ func handleRequests() {
 	router.GET("/book/detail/:ID", api.ViewBookDetail)
 	router.GET("/book/search", api.SearchBook)
 	router.GET("/book/list", api.GetAllBooks)
-	router.POST("/book/add", api.AddBook)
-	router.POST("/book/update", api.UpdateBook)
-	router.POST("/book/delete/:bookID", api.DeleteBook)
-	//borrow return api
-	router.POST("/book/borrow", api.BorrowBook)
-	router.POST("/book/return", api.ReturnBook)
 
 	// router.OPTIONS("/book/detail/:ID", func(c *gin.Context) {
 	// 	c.JSON(http.StatusOK, gin.H{"message": "success"})
@@ -81,9 +72,23 @@ func handleRequests() {
 	router.POST("/login", loginHandler.LoginHandler)
 	router.POST("/logout", api.Logout)
 
-	router.POST("/feature/enable/:name", api.EnableFeature)
-	router.POST("/feature/disable/:name", api.DisableFeature)
-	router.POST("/feature/add/:name", api.AddFeature)
+	router.Use(loginHandler.MiddlewareFunc())
+	{
+		router.POST("/feature/add/:name", api.AddFeature)
+		router.POST("/book/add", api.AddBook)
+		router.POST("/book/update", api.UpdateBook)
+		router.POST("/book/delete/:bookID", api.DeleteBook)
+		router.POST("/feature/enable/:name", api.EnableFeature)
+		router.POST("/feature/disable/:name", api.DisableFeature)
+
+		//borrow return api
+		router.POST("/book/borrow", api.BorrowBook)
+		router.POST("/book/return", api.ReturnBook)
+		router.POST("/user/add", api.AddUser)
+		router.POST("/user/delete/:name", api.DeleteUser)
+		router.POST("/user/update", api.UpdateUser)
+		router.GET("/refresh_token", loginHandler.RefreshHandler)
+	}
 
 	// router.OPTIONS("/login", func(c *gin.Context) {
 	// 	c.JSON(http.StatusOK, gin.H{"message": "success"})
