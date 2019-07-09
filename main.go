@@ -100,6 +100,10 @@ func handleRequests() {
 		c.JSON(http.StatusOK, gin.H{"message": "success"})
 	})
 
+	router.POST("/heroku-deployed", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "successfully deployed"})
+	})
+
 	router.Run()
 }
 
