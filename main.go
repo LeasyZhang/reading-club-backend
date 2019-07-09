@@ -12,6 +12,7 @@ import (
 
 func handleRequests() {
 	gin.SetMode(gin.DebugMode)
+
 	router := gin.Default()
 
 	router.Use(middleware.AllowCORS())
