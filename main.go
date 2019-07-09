@@ -74,7 +74,9 @@ func handleRequests() {
 	loginHandler, _ := middleware.AuthMiddleWare()
 	router.POST("/login", loginHandler.LoginHandler)
 	router.POST("/logout", api.Logout)
-
+	router.POST("/heroku-deployed", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "successfully deployed"})
+	})
 	router.Use(loginHandler.MiddlewareFunc())
 	{
 		router.POST("/feature/add/:name", api.AddFeature)
@@ -98,10 +100,6 @@ func handleRequests() {
 	})
 	router.OPTIONS("/logout", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"message": "success"})
-	})
-
-	router.POST("/heroku-deployed", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "successfully deployed"})
 	})
 
 	router.Run()
