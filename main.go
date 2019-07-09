@@ -20,7 +20,7 @@ func handleRequests() {
 	router.GET("/", func(c *gin.Context) {
 		c.JSON(200, gin.H{"message": "hello~~"})
 	})
-	//user api
+
 	router.GET("/user/list", api.GetUserList)
 
 	router.OPTIONS("/user/list", func(c *gin.Context) {
