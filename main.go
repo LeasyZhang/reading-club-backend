@@ -106,7 +106,7 @@ func handleRequests() {
 }
 
 func main() {
-	// add a comment
+	// add a another comment
 	db, err := database.GetDBConnection()
 
 	if err != nil {
