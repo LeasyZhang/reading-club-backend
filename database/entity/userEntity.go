@@ -17,7 +17,7 @@ type User struct {
 	UpdatedTime  time.Time `json:"updatedTime"`
 }
 
-// TableName history table name
+// TableName user table name
 func (User) TableName() string {
 	return "rc_user"
 }
