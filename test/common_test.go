@@ -1,21 +1,21 @@
 package test
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"testing"
+
+	"github.com/gin-gonic/gin"
 )
 
-//TestMain : set up before testing environment
-func TestMain(m *testing.M) {
+// //TestMain : set up before testing environment
+// func TestMain(m *testing.M) {
 
-	gin.SetMode(gin.TestMode)
-	//run other test
+// 	gin.SetMode(gin.TestMode)
+// 	//run other test
 
-	os.Exit(m.Run())
-}
+// 	os.Exit(m.Run())
+// }
 
 // GetRouter : helper function to create a router during testing
 func getRouter() *gin.Engine {
