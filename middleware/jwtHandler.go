@@ -103,7 +103,7 @@ func AuthMiddleWare() (*jwt.GinJWTMiddleware, error) {
 			})
 		},
 
-		TokenLookup: "header: Authorization, query: token, cookie: jwt",
+		TokenLookup: "header: Authorization",
 
 		TokenHeadName: "Bearer",
 
