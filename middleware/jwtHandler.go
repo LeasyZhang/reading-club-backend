@@ -105,7 +105,7 @@ func AuthMiddleWare() (*jwt.GinJWTMiddleware, error) {
 
 		TokenLookup: "header: Authorization",
 
-		TokenHeadName: "Bearer",
+		TokenHeadName: "Basic",
 
 		TimeFunc: time.Now,
 
