@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"reading-club-backend/api"
+	"reading-club-backend/config"
 	"reading-club-backend/database"
 	"reading-club-backend/middleware"
 )
@@ -106,7 +107,7 @@ func handleRequests() {
 }
 
 func main() {
-	// add a another comment
+	config.InitConfiguration()
 	db, err := database.GetDBConnection()
 
 	if err != nil {

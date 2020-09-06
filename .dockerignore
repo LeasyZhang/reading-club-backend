@@ -1,0 +1,8 @@
+bin/*
+.idea/*
+.idea
+bin
+.DS_Store
+Procfile
+Makefile
+heroku.yml

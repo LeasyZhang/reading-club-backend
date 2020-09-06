@@ -1,6 +1,6 @@
 {
     "db": {
-        "url" : "host=localhost port=5432 user=joe.zhang dbname=mydb password=19950209 sslmode=disable",
+        "url" : "host=localhost port=5432 user=joe.zhang dbname=demo sslmode=disable",
         "dbEngine" : "postgres",
         "maxIdleConnections": 10,
         "maxOpenConnections": 20

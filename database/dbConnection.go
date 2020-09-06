@@ -1,10 +1,10 @@
 package database
 
 import (
-	"os"
-
 	"github.com/jinzhu/gorm"
 	//postgres database
+	"reading-club-backend/config"
+
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
@@ -12,23 +12,23 @@ import (
 var Conn *gorm.DB
 
 //TestDBName test database connection(local database)
-var testDBName = "host=localhost port=5432 user=joe.zhang dbname=mydb password=19950209 sslmode=disable"
-var prodDBName = os.Getenv("DATABASE_URL")
-
-//DBName production : os.Getenv("DATABASE_URL") local: TestDBName
-var DBName = prodDBName
-
-//DBEngine engine name for database connection
-var DBEngine = "postgres"
 
 //GetDBConnection open database connection
 func GetDBConnection() (*gorm.DB, error) {
-	db, err := gorm.Open(DBEngine, DBName)
+	//prodDBName := os.Getenv("DATABASE_URL")
+	dbConnectionURL := config.Configuration.DB.URL
+	maxIdleConns := config.Configuration.DB.MaxIdleConnections
+	maxOpenConns := config.Configuration.DB.MaxOpenConnections
+
+	//DBEngine engine name for database connection
+	dBEngine := config.Configuration.DB.DbEngine
+
+	db, err := gorm.Open(dBEngine, dbConnectionURL)
 	if err != nil {
 		panic("Failed to connect to database " + err.Error())
 	}
-	db.DB().SetMaxIdleConns(10)
-	db.DB().SetMaxOpenConns(20)
+	db.DB().SetMaxIdleConns(maxIdleConns)
+	db.DB().SetMaxOpenConns(maxOpenConns)
 
 	Conn = db
 	return db, err
