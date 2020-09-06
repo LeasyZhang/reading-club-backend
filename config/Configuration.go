@@ -28,14 +28,13 @@ var Configuration *Config
 
 //InitConfiguration load configuration file
 func InitConfiguration() {
-	fmt.Println("Init Config")
+	fmt.Println("Init configuration.")
 	file, _ := os.Open("./config/test-config.json")
 	defer file.Close()
 
 	decoder := json.NewDecoder(file)
 
 	err := decoder.Decode(&Configuration)
-	fmt.Println(Configuration)
 	if err != nil {
 		panic("config file not found")
 	}
