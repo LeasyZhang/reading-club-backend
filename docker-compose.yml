@@ -1,0 +1,36 @@
+version: '3'
+services: 
+    app:
+        container_name: reading_club_backend
+        build: 
+            context: .
+            dockerfile: Dockerfile.dev
+        ports: 
+            - 8080:8080
+        restart: on-failure
+        depends_on: 
+            - full_postgres
+        networks: 
+            - fullstack
+    full_postgres:
+        image: postgres:latest
+        container_name: full_db_postgres
+        environment:
+            - POSTGRES_USER=${DB_USER}  
+            - POSTGRES_PASSWORD=${DB_PASSWORD}
+            - POSTGRES_DB=${DB_NAME}
+            - DATABASE_HOST=${DB_HOST} 
+        ports:
+            - '5432:5432'
+        volumes:
+            - database_postgres:/var/lib/postgresql/data
+        networks:
+            - fullstack
+volumes:
+        api:
+            database_postgres:
+              
+# Networks to be created to facilitate communication between containers
+networks:
+        fullstack:
+            driver: bridge
