@@ -6,6 +6,7 @@ import (
 	"reading-club-backend/config"
 
 	_ "github.com/jinzhu/gorm/dialects/postgres"
+	"reading-club-backend/database/entity"
 )
 
 //Conn database connection
@@ -30,6 +31,13 @@ func GetDBConnection() (*gorm.DB, error) {
 	db.DB().SetMaxIdleConns(maxIdleConns)
 	db.DB().SetMaxOpenConns(maxOpenConns)
 
+	db.AutoMigrate(&entity.User{})
+	db.AutoMigrate(&entity.Book{})
+	db.AutoMigrate(&entity.Role{})
+	db.AutoMigrate(&entity.Feature{})
+	db.AutoMigrate(&entity.BorrowHistory{})
+
 	Conn = db
+
 	return db, err
 }

@@ -39,7 +39,6 @@ func GetUserByName(userName string) (entity.User, *dto.UserErrorResponse) {
 
 // GetUserList : get user list
 func GetUserList() (userList []entity.User, userError *dto.UserErrorResponse) {
-
 	errors := db.Conn.Find(&userList).GetErrors()
 
 	for _, err := range errors {
