@@ -6,10 +6,11 @@ services:
             context: .
             dockerfile: Dockerfile.dev
         ports: 
-            - 8080:8080
+            - 9000:9000
         restart: on-failure
         depends_on: 
             - full_postgres
+        command: bash -c 'while !</dev/tcp/full_postgres/5432; do sleep 1; done; ./reading-club-backend'
         networks: 
             - fullstack
     full_postgres:
@@ -28,7 +29,7 @@ services:
             - fullstack
 volumes:
         api:
-            database_postgres:
+        database_postgres:
               
 # Networks to be created to facilitate communication between containers
 networks:
