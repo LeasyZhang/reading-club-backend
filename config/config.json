@@ -1,6 +1,6 @@
 {
     "db": {
-        "url" : "",
+        "url" : "host=full_postgres port=5432 user=joe dbname=demo password=password sslmode=disable",
         "dbEngine" : "postgres",
         "maxIdleConnections": 10,
         "maxOpenConnections": 20
