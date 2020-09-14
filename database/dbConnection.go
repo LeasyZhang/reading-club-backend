@@ -1,6 +1,7 @@
 package database
 
 import (
+	"fmt"
 	"github.com/jinzhu/gorm"
 	"os"
 	//postgres database
@@ -17,10 +18,12 @@ var Conn *gorm.DB
 func GetDBConnection() (*gorm.DB, error) {
 	var dbConnectionURL string
 	dbConnectionURL, exists := os.LookupEnv("DATABASE_URL")
+	fmt.Println(dbConnectionURL)
+	fmt.Println(exists)
 	if !exists {
 		dbConnectionURL = config.Configuration.DB.URL
 	}
-
+	fmt.Println(dbConnectionURL)
 	maxIdleConns := config.Configuration.DB.MaxIdleConnections
 	maxOpenConns := config.Configuration.DB.MaxOpenConnections
 
