@@ -2,6 +2,7 @@ package database
 
 import (
 	"github.com/jinzhu/gorm"
+	"os"
 	//postgres database
 	"reading-club-backend/config"
 
@@ -12,12 +13,14 @@ import (
 //Conn database connection
 var Conn *gorm.DB
 
-//TestDBName test database connection(local database)
-
 //GetDBConnection open database connection
 func GetDBConnection() (*gorm.DB, error) {
-	//prodDBName := os.Getenv("DATABASE_URL")
-	dbConnectionURL := config.Configuration.DB.URL
+	var dbConnectionURL string
+	dbConnectionURL, exists := os.LookupEnv("DATABASE_URL")
+	if !exists {
+		dbConnectionURL = config.Configuration.DB.URL
+	}
+
 	maxIdleConns := config.Configuration.DB.MaxIdleConnections
 	maxOpenConns := config.Configuration.DB.MaxOpenConnections
 
