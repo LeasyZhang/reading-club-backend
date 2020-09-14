@@ -18,10 +18,7 @@ var Conn *gorm.DB
 
 //GetDBConnection open database connection
 func GetDBConnection() (*gorm.DB, error) {
-	dbConnectionURL := config.Configuration.DB.URL
-	if dbConnectionURL == "lookup_heroku" {
-		dbConnectionURL = os.Getenv("DATABASE_URL")
-	}
+	dbConnectionURL := os.Getenv("DATABASE_URL")
 	maxIdleConns := config.Configuration.DB.MaxIdleConnections
 	maxOpenConns := config.Configuration.DB.MaxOpenConnections
 
