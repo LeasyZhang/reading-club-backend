@@ -29,7 +29,7 @@ var Configuration *Config
 //InitConfiguration load configuration file
 func InitConfiguration() {
 	fmt.Println("Init configuration.")
-	file, _ := os.Open("./config/config.json")
+	file, _ := os.Open("./config/config_prod.json")
 	defer file.Close()
 
 	decoder := json.NewDecoder(file)
