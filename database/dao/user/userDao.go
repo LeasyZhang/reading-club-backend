@@ -68,8 +68,9 @@ func DeleteUser(username string) {
 // FindUserByNameAndPassword : find user by given name and password
 func FindUserByNameAndPassword(username string, password string) bool {
 
+	fmt.Println(username + "---->" + password)
 	encoded := util.Encrypt(password)
-
+	fmt.Println(encoded)
 	var user entity.User
 	errors := db.Conn.Where("user_name ~* ? and password = ?", username, encoded).Find(&user).GetErrors()
 	for _, err := range errors {

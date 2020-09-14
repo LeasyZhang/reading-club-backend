@@ -66,6 +66,12 @@ func handleRequests() {
 	router.OPTIONS("/book/return", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{"message": "success"})
 	})
+	router.OPTIONS("/login", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "success"})
+	})
+	router.OPTIONS("/logout", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "success"})
+	})
 
 	//history api
 	router.GET("/history/user/:username", api.GetUserHistory)
@@ -95,13 +101,6 @@ func handleRequests() {
 		router.POST("/user/update", api.UpdateUser)
 		router.GET("/refresh_token", loginHandler.RefreshHandler)
 	}
-
-	router.OPTIONS("/login", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "success"})
-	})
-	router.OPTIONS("/logout", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "success"})
-	})
 
 	router.Run()
 }
