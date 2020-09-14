@@ -1,14 +1,16 @@
 package database
 
 import (
-	"fmt"
-	"github.com/jinzhu/gorm"
 	"os"
+
+	"github.com/jinzhu/gorm"
+
 	//postgres database
 	"reading-club-backend/config"
 
-	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"reading-club-backend/database/entity"
+
+	_ "github.com/jinzhu/gorm/dialects/postgres"
 )
 
 //Conn database connection
@@ -16,14 +18,10 @@ var Conn *gorm.DB
 
 //GetDBConnection open database connection
 func GetDBConnection() (*gorm.DB, error) {
-	var dbConnectionURL string
-	dbConnectionURL, exists := os.LookupEnv("DATABASE_URL")
-	fmt.Println(dbConnectionURL)
-	fmt.Println(exists)
-	if !exists {
-		dbConnectionURL = config.Configuration.DB.URL
+	dbConnectionURL := config.Configuration.DB.URL
+	if dbConnectionURL == "lookup_heroku" {
+		dbConnectionURL = os.Getenv("DATABASE_URL")
 	}
-	fmt.Println(dbConnectionURL)
 	maxIdleConns := config.Configuration.DB.MaxIdleConnections
 	maxOpenConns := config.Configuration.DB.MaxOpenConnections
 

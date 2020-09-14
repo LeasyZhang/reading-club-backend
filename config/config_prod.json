@@ -1,0 +1,14 @@
+{
+    "db": {
+        "url" : "lookup_heroku",
+        "dbEngine" : "postgres",
+        "maxIdleConnections": 10,
+        "maxOpenConnections": 20
+    },
+
+    "jwt" : {
+        "timeout" : 180,
+        "maxRefresh" : 86400
+    }
+    
+}
